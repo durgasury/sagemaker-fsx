@@ -5,6 +5,16 @@ This sample shows how to setup up and use FSx with SageMaker Training. Repo cont
 - How to use SageMaker training job to access data in FSx
 - Tear the infra down and automatically save your training artifacts to S3
 
+Setup/Requirements
+
+SageMaker Notebook that has the below IAM Policies attached
+
+- [AmazonFSxFullAccess](https://console.aws.amazon.com/iam/home#/policies/arn:aws:iam::aws:policy/AmazonFSxFullAccess)
+- [NetworkAdministrator](https://console.aws.amazon.com/iam/home#/policies/arn:aws:iam::aws:policy/job-function/NetworkAdministrator)
+- [AmazonSageMakerFullAccess](https://console.aws.amazon.com/iam/home#/policies/arn:aws:iam::aws:policy/AmazonSageMakerFullAccess)
+- [AWSCloudFormationFullAccess](https://console.aws.amazon.com/iam/home#/policies/arn:aws:iam::aws:policy/AWSCloudFormationFullAccess)
+- [FSx access to S3](https://docs.aws.amazon.com/fsx/latest/LustreGuide/setting-up.html#fsx-adding-permissions-s3)
+
 TLDR
 
 Please make sure you read this [blog](https://aws.amazon.com/blogs/machine-learning/choose-the-best-data-source-for-your-amazon-sagemaker-training-job/) on if your use-case needs FSx so you can avoid operation costs.
