@@ -15,6 +15,8 @@ SageMaker Notebook that has the below IAM Policies attached
 - [AWSCloudFormationFullAccess](https://console.aws.amazon.com/iam/home#/policies/arn:aws:iam::aws:policy/AWSCloudFormationFullAccess)
 - [FSx access to S3](https://docs.aws.amazon.com/fsx/latest/LustreGuide/setting-up.html#fsx-adding-permissions-s3)
 
+Update setup/cfn-nlp.yaml with VPC Id, IGWId and cidr blocks for public and private subnets
+
 TLDR
 
 Please make sure you read this [blog](https://aws.amazon.com/blogs/machine-learning/choose-the-best-data-source-for-your-amazon-sagemaker-training-job/) on if your use-case needs FSx so you can avoid operation costs.
