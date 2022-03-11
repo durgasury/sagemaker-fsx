@@ -1,26 +1,16 @@
 Description: >-
-  Creates VPC and subnets for FSx to be used in SageMaker for large scale distributed training
+  Creates Subnets for FSx to be used in SageMaker for large scale distributed training
 Parameters:
   AZ:
     Description: Availablity Zone
     Type: String
 
 Resources:
-  Vpc:
-    Type: 'AWS::EC2::VPC'
-    Properties:
-      CidrBlock: 10.52.0.0/16
-      EnableDnsHostnames: true
-      EnableDnsSupport: true
-      InstanceTenancy: default
-      Tags:
-        - Key: Name
-          Value: !Ref 'AWS::StackName'
   PublicSubnet:
     Type: 'AWS::EC2::Subnet'
     Properties:
-      CidrBlock: 10.52.0.0/20
-      VpcId: !Ref Vpc
+      CidrBlock: 172.31.64.0/20
+      VpcId: vpc-4c715b34
       AvailabilityZone: !Ref AZ
       MapPublicIpOnLaunch: true
       Tags:
@@ -35,7 +25,7 @@ Resources:
   PublicRouteTable:
     Type: 'AWS::EC2::RouteTable'
     Properties:
-      VpcId: !Ref Vpc
+      VpcId: vpc-4c715b34
       Tags:
         - Key: Name
           Value: !Ref 'AWS::StackName'
@@ -49,9 +39,7 @@ Resources:
     Properties:
       RouteTableId: !Ref PublicRouteTable
       DestinationCidrBlock: 0.0.0.0/0
-      GatewayId: !Ref InternetGateway
-    DependsOn:
-      - GatewayToInternet
+      GatewayId: igw-0b168a72
   PublicNATGatewayEIP:
     Type: 'AWS::EC2::EIP'
     Properties:
@@ -72,8 +60,8 @@ Resources:
   PrivateSubnet:
     Type: 'AWS::EC2::Subnet'
     Properties:
-      CidrBlock: 10.52.16.0/20
-      VpcId: !Ref Vpc
+      CidrBlock: 172.31.80.0/20
+      VpcId: vpc-4c715b34
       AvailabilityZone: !Ref AZ
       MapPublicIpOnLaunch: false
       Tags:
@@ -88,7 +76,7 @@ Resources:
   PrivateRouteTable:
     Type: 'AWS::EC2::RouteTable'
     Properties:
-      VpcId: !Ref Vpc
+      VpcId: vpc-4c715b34
       Tags:
         - Key: Name
           Value: !Ref 'AWS::StackName'
@@ -103,17 +91,6 @@ Resources:
       RouteTableId: !Ref PrivateRouteTable
       DestinationCidrBlock: 0.0.0.0/0
       NatGatewayId: !Ref PublicNATGateway
-  InternetGateway:
-    Type: 'AWS::EC2::InternetGateway'
-    Properties:
-      Tags:
-        - Key: Name
-          Value: !Ref 'AWS::StackName'
-  GatewayToInternet:
-    Type: 'AWS::EC2::VPCGatewayAttachment'
-    Properties:
-      VpcId: !Ref Vpc
-      InternetGatewayId: !Ref InternetGateway
   SecurityGroup:
     Type: 'AWS::EC2::SecurityGroup'
     Properties:
@@ -125,7 +102,7 @@ Resources:
           FromPort: 22
           IpProtocol: tcp
           ToPort: 22
-      VpcId: !Ref Vpc
+      VpcId: vpc-4c715b34
   SecurityGroupEgressAllTraffic:
     Type: 'AWS::EC2::SecurityGroupEgress'
     Properties:
@@ -182,7 +159,7 @@ Resources:
     DeletionPolicy: Delete
 Outputs:
   vpc:
-    Value: !Ref Vpc
+    Value: vpc-4c715b34
   sg:
     Value: !GetAtt 
       - SecurityGroup
