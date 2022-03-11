@@ -7,9 +7,10 @@ import time
 def train(args):
 
     print('args', args)
+    
     tmp = os.listdir(args.training_dir)
     print ('listing training files', tmp)
-        
+
 
     # Run training loop.
     epochs = 5

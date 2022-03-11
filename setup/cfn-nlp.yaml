@@ -5,12 +5,30 @@ Parameters:
     Description: Availablity Zone
     Type: String
 
+  VPCID:
+    Description: VPC Id
+    Type: String
+    
+  IGWID:
+    Description: IGW Id
+    Type: String
+    
+  PUBLICSUBNETCIDRBLOCK:
+    Description: Public Subnet Cidr Block
+    Type: String
+
+  PRIVATESUBNETCIDRBLOCK:
+    Description: Private Subnet Cidr Block
+    Type: String
+
+
+
 Resources:
   PublicSubnet:
     Type: 'AWS::EC2::Subnet'
     Properties:
-      CidrBlock: 172.31.64.0/20
-      VpcId: vpc-4c715b34
+      CidrBlock: !Ref PUBLICSUBNETCIDRBLOCK
+      VpcId: !Ref VPCID
       AvailabilityZone: !Ref AZ
       MapPublicIpOnLaunch: true
       Tags:
@@ -25,7 +43,7 @@ Resources:
   PublicRouteTable:
     Type: 'AWS::EC2::RouteTable'
     Properties:
-      VpcId: vpc-4c715b34
+      VpcId: !Ref VPCID
       Tags:
         - Key: Name
           Value: !Ref 'AWS::StackName'
@@ -39,7 +57,7 @@ Resources:
     Properties:
       RouteTableId: !Ref PublicRouteTable
       DestinationCidrBlock: 0.0.0.0/0
-      GatewayId: igw-0b168a72
+      GatewayId: !Ref IGWID
   PublicNATGatewayEIP:
     Type: 'AWS::EC2::EIP'
     Properties:
@@ -60,8 +78,8 @@ Resources:
   PrivateSubnet:
     Type: 'AWS::EC2::Subnet'
     Properties:
-      CidrBlock: 172.31.80.0/20
-      VpcId: vpc-4c715b34
+      CidrBlock: !Ref PRIVATESUBNETCIDRBLOCK
+      VpcId: !Ref VPCID
       AvailabilityZone: !Ref AZ
       MapPublicIpOnLaunch: false
       Tags:
@@ -76,7 +94,7 @@ Resources:
   PrivateRouteTable:
     Type: 'AWS::EC2::RouteTable'
     Properties:
-      VpcId: vpc-4c715b34
+      VpcId: !Ref VPCID
       Tags:
         - Key: Name
           Value: !Ref 'AWS::StackName'
@@ -102,7 +120,7 @@ Resources:
           FromPort: 22
           IpProtocol: tcp
           ToPort: 22
-      VpcId: vpc-4c715b34
+      VpcId: !Ref VPCID
   SecurityGroupEgressAllTraffic:
     Type: 'AWS::EC2::SecurityGroupEgress'
     Properties:
@@ -159,7 +177,7 @@ Resources:
     DeletionPolicy: Delete
 Outputs:
   vpc:
-    Value: vpc-4c715b34
+    Value: !Ref VPCID
   sg:
     Value: !GetAtt 
       - SecurityGroup
@@ -172,5 +190,5 @@ Outputs:
     Value: !GetAtt 
       - PrivateSubnet
       - AvailabilityZone
-  outputfsx:
+  fsx:
     Value: !Ref FSx
