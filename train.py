@@ -2,6 +2,7 @@ import argparse
 import os
 import sys
 import time
+import errno
 
 
 def train(args):
@@ -21,9 +22,10 @@ def train(args):
         print("Completed epoch {0}.".format(x))
 
     # At the end of the training loop, we have to save model artifacts.
-    model_file = open(args.model_dir+"/model.dummy", "w")
-    model_file.write('Dummy model.')
-    model_file.close()
+    model_filename = args.model_dir+"/model.dummy"
+    os.makedirs(os.path.dirname(model_filename), exist_ok=True)
+    with open(model_filename, "w") as f:
+        f.write("Dummy model.")
 
 
 if __name__ == "__main__":
