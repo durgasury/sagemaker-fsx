@@ -149,16 +149,14 @@ Resources:
   SecurityGroupIngressTCP:
     Type: 'AWS::EC2::SecurityGroupIngress'
     Properties:
-      IpProtocol: tcp
-      Description: 'from 988-1023'
-      FromPort: 988
+      IpProtocol: '-1'
+      Description: all traffic from self
       GroupId: !GetAtt 
         - SecurityGroup
         - GroupId
       SourceSecurityGroupId: !GetAtt 
         - SecurityGroup
         - GroupId
-      ToPort: 1023
   FSx:
     Type: 'AWS::FSx::FileSystem'
     Properties:
